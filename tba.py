@@ -19,9 +19,12 @@ class TBA(object):
 		return teamData["location"]
 
 	def getRobot(self, team : str, year : str):
-		teamData = json.loads(self.teamRequest("team/frc" + team + "/history/robots"))
-		yearData = teamData[year]
-		return yearData["name"]
+		try:
+		    teamData = json.loads(self.teamRequest("team/frc" + team + "/history/robots"))
+		    yearData = teamData[year]
+		    return yearData["name"]
+		except KeyError:
+			return "No robot name for that year. Rip"
 
 	def getAwards(self, team : str):
 		teamData = json.loads(self.teamRequest("team/frc" + team + "/history/awards"))
