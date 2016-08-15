@@ -5,7 +5,7 @@ HEADER_KEY = '?X-TBA-App-Id='
 HEADER_VAL = 'frcTom:discord-bot:1'
 
 client = discord.Client()
-commandPrefix = "&"
+commandPrefix = "%"
 prefix = "TBA"
 token = open("token.txt", "rb").read().decode("utf-8")
 req = TBA()
@@ -66,4 +66,19 @@ async def on_message(message):
             await client.send_message(message.channel, result[1] + ": You have been warned for breaking a server rule!")
         else:
             await client.send_message(message.channel, "Your not a mod so no")
+    if (message.content.startswith(commandPrefix + "mute")):
+        if(isMod(message.author.roles)):
+            result = message.content.split(" ")
+            await client.add_roles(discord.utils.get(message.server.members, mention=result[1]), discord.utils.get(message.server.roles, name="muted"))
+            await client.send_message(message.channel, result[1] + " you have been muted")
+        else:
+            await client.send_message(message.channel, "Your not a mod so no")
+    if (message.content.startswith(commandPrefix + "unmute")):
+       if(isMod(message.author.roles)):
+           result = message.content.split(" ")
+           await client.remove_roles(discord.utils.get(message.server.members, mention=result[1]), discord.utils.get(message.server.roles, name="muted"))
+           await client.send_message(message.channel, result[1] + " you have been unmuted")
+       else:
+           await client.send_message(message.channel, "Your not a mod so no")
+
 client.run(token[0:59])
